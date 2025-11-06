@@ -11,10 +11,6 @@ RUN wget -O /tmp/subconverter_linux64.tar.gz https://github.com/tindy2013/subcon
     tar -xzf /tmp/subconverter_linux64.tar.gz -C / && \
     rm -rf /tmp/subconverter_linux64.tar.gz
 
-# 15min    daily    hourly   monthly  weekly
-COPY sub.sh /etc/periodic/hourly/sub.sh
-RUN chmod +x /etc/periodic/hourly/sub.sh
-
 RUN echo 'mixed-port: 7890' >> /root/.config/mihomo/config.yaml && \
     echo 'external-ui: /root/.config/mihomo/ui' >> /root/.config/mihomo/config.yaml && \
     echo 'allow-lan: true' >> /root/.config/mihomo/config.yaml && \
@@ -30,5 +26,9 @@ RUN echo '#!/bin/sh' > /mihomo_init.sh && \
     echo '/etc/periodic/hourly/sub.sh' >> /mihomo_init.sh && \
     echo 'exec crond -f -d 8' >> /mihomo_init.sh && \
     chmod +x /mihomo_init.sh
+
+# 15min    daily    hourly   monthly  weekly
+COPY sub.sh /etc/periodic/hourly/sub.sh
+RUN chmod +x /etc/periodic/hourly/sub.sh
 
 ENTRYPOINT ["/mihomo_init.sh"]
